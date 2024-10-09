@@ -1,11 +1,11 @@
 """
 Joshua Liu
 October 9th, 2024
-2028 Remake
+2048 Remake
 """
 
 import time
-from random import randint, uniform
+from random import randint
 
 import pygame
 
