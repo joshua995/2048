@@ -49,9 +49,7 @@ pygame.display.set_caption("2048"), screen.fill(black)
 gridSize = 4
 cellSize = int(WINDOW_SIZE // (gridSize * 1.25))
 
-FONT_20 = pygame.font.SysFont("Arial", int(WINDOW_SIZE / 37.5))
-FONT_30 = pygame.font.SysFont("Arial", int(WINDOW_SIZE / 25))
-FONT_50 = pygame.font.SysFont("Arial", int(WINDOW_SIZE / 15))
+FONT_50 = pygame.font.SysFont("Arial", int(50))
 
 startPos = (WINDOW_SIZE - (gridSize * cellSize)) / 2  # Starting pos to center the board
 
