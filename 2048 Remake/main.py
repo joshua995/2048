@@ -9,7 +9,6 @@ from random import randint
 
 import pygame
 
-print("Test")
 
 class Cell(object):
     def __init__(self, pos, value):
@@ -47,14 +46,12 @@ WINDOW_SIZE = 750  # WINDOW_SIZE default 750
 screen = pygame.display.set_mode((WINDOW_SIZE, WINDOW_SIZE))
 pygame.display.set_caption("2048"), screen.fill(black)
 
-gridSize = 75
+gridSize = 4
 cellSize = int(WINDOW_SIZE // (gridSize * 1.25))
 
 FONT_20 = pygame.font.SysFont("Arial", int(WINDOW_SIZE / 37.5))
 FONT_30 = pygame.font.SysFont("Arial", int(WINDOW_SIZE / 25))
 FONT_50 = pygame.font.SysFont("Arial", int(WINDOW_SIZE / 15))
-
-closeWindow = False
 
 startPos = (WINDOW_SIZE - (gridSize * cellSize)) / 2  # Starting pos to center the board
 
@@ -68,6 +65,10 @@ cellGrid = [[None for x in range(gridSize)] for y in range(gridSize)]
 
 score = 0
 scorePrefix = "Score :"
+
+playWithNegatives = False
+
+closeWindow = False
 
 
 def createGrid():
@@ -98,10 +99,8 @@ def addNewCell():
         if time.time() - start > 1:  # Timeout
             closeWindow = True
             break
-
-    if randint(0, 1) == 0:
-        randValue = randint(1, 2) * 2  # pick a value 2 or 4 for the new cell
-    else:
+    randValue = randint(1, 2) * 2  # pick a value 2 or 4 for the new cell
+    if playWithNegatives and randint(0, 1) == 0:
         randValue = randint(1, 2) * -2
     # generate the new cell
     tempC = Cell([grid[randx][randy][0], grid[randx][randy][1]], randValue)
@@ -256,10 +255,9 @@ def isGameOver():
                             masterChange = True
                             break
             for y in range(gridSize):
-                if cellGrid[x][y] is not None and not cellGrid[x][y].hasChanged:
+                if cellGrid[x][y] is not None:
                     if (
                         cellGrid[x + 1][y] is not None
-                        and not cellGrid[x + 1][y].hasChanged
                         and cellGrid[x + 1][y].value == cellGrid[x][y].value
                     ):
                         masterChange = True
@@ -275,10 +273,9 @@ def isGameOver():
                             masterChange = True
                             break
             for y in range(gridSize):
-                if cellGrid[x][y] is not None and not cellGrid[x][y].hasChanged:
+                if cellGrid[x][y] is not None :
                     if (
                         cellGrid[x - 1][y] is not None
-                        and not cellGrid[x - 1][y].hasChanged
                         and cellGrid[x - 1][y].value == cellGrid[x][y].value
                     ):
                         masterChange = True
@@ -294,10 +291,9 @@ def isGameOver():
                             masterChange = True
                             break
             for x in range(gridSize):
-                if cellGrid[x][y] is not None and not cellGrid[x][y].hasChanged:
+                if cellGrid[x][y] is not None :
                     if (
                         cellGrid[x][y - 1] is not None
-                        and not cellGrid[x][y - 1].hasChanged
                         and cellGrid[x][y - 1].value == cellGrid[x][y].value
                     ):
                         masterChange = True
@@ -313,10 +309,9 @@ def isGameOver():
                             masterChange = True
                             break
             for x in range(gridSize):
-                if cellGrid[x][y] is not None and not cellGrid[x][y].hasChanged:
+                if cellGrid[x][y] is not None :
                     if (
                         cellGrid[x][y + 1] is not None
-                        and not cellGrid[x][y + 1].hasChanged
                         and cellGrid[x][y + 1].value == cellGrid[x][y].value
                     ):
                         masterChange = True
