@@ -1,5 +1,7 @@
 """
 Joshua Liu
+October 9th, 2024
+2028 Remake
 """
 
 import time
@@ -45,7 +47,7 @@ screen = pygame.display.set_mode((WINDOW_SIZE, WINDOW_SIZE))
 pygame.display.set_caption("2048"), screen.fill(black)
 
 gridSize = 75
-cellSize = int(WINDOW_SIZE // (gridSize *1.25))
+cellSize = int(WINDOW_SIZE // (gridSize * 1.25))
 
 FONT_20 = pygame.font.SysFont("Arial", int(WINDOW_SIZE / 37.5))
 FONT_30 = pygame.font.SysFont("Arial", int(WINDOW_SIZE / 25))
