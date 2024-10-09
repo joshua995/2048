@@ -9,6 +9,7 @@ from random import randint
 
 import pygame
 
+print("Test")
 
 class Cell(object):
     def __init__(self, pos, value):
