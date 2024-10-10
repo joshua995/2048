@@ -129,6 +129,16 @@ def addNewCell():
     cellGrid[randx][randy] = tempC
 
 
+def isMerge(val1, val2):
+    return (
+        cellGrid[val1[0]][val1[1]] is not None
+        and not cellGrid[val1[0]][val1[1]].hasChanged
+        and cellGrid[val2[0]][val2[1]] is not None
+        and not cellGrid[val2[0]][val2[1]].hasChanged
+        and cellGrid[val2[0]][val2[1]].value == cellGrid[val1[0]][val1[1]].value
+    )
+
+
 def shiftCells(direction):
     global score
     masterChange = False
@@ -149,21 +159,16 @@ def shiftCells(direction):
                                 masterChange = True
                                 break
                 for y in range(gridSize):
-                    if cellGrid[x][y] is not None and not cellGrid[x][y].hasChanged:
-                        if (
-                            cellGrid[x + 1][y] is not None
-                            and not cellGrid[x + 1][y].hasChanged
-                            and cellGrid[x + 1][y].value == cellGrid[x][y].value
-                        ):
-                            cellGrid[x + 1][y] = Cell(
-                                grid[x + 1][y], cellGrid[x][y].value * 2
-                            )
-                            score += cellGrid[x][y].value
-                            cellGrid[x + 1][y].setHasChanged(True)
-                            cellGrid[x][y] = None
-                            changed = True
-                            masterChange = True
-                            break
+                    if isMerge([x, y], [x + 1, y]):
+                        cellGrid[x + 1][y] = Cell(
+                            grid[x + 1][y], cellGrid[x][y].value * 2
+                        )
+                        score += cellGrid[x][y].value
+                        cellGrid[x + 1][y].setHasChanged(True)
+                        cellGrid[x][y] = None
+                        changed = True
+                        masterChange = True
+                        break
     elif direction == pygame.K_LEFT:
         changed = True
         while changed:
@@ -181,21 +186,16 @@ def shiftCells(direction):
                                 masterChange = True
                                 break
                 for y in range(gridSize):
-                    if cellGrid[x][y] is not None and not cellGrid[x][y].hasChanged:
-                        if (
-                            cellGrid[x - 1][y] is not None
-                            and not cellGrid[x - 1][y].hasChanged
-                            and cellGrid[x - 1][y].value == cellGrid[x][y].value
-                        ):
-                            cellGrid[x - 1][y] = Cell(
-                                grid[x - 1][y], cellGrid[x][y].value * 2
-                            )
-                            score += cellGrid[x][y].value
-                            cellGrid[x - 1][y].setHasChanged(True)
-                            cellGrid[x][y] = None
-                            changed = True
-                            masterChange = True
-                            break
+                    if isMerge([x, y], [x - 1, y]):
+                        cellGrid[x - 1][y] = Cell(
+                            grid[x - 1][y], cellGrid[x][y].value * 2
+                        )
+                        score += cellGrid[x][y].value
+                        cellGrid[x - 1][y].setHasChanged(True)
+                        cellGrid[x][y] = None
+                        changed = True
+                        masterChange = True
+                        break
     elif direction == pygame.K_UP:
         changed = True
         while changed:
@@ -213,21 +213,16 @@ def shiftCells(direction):
                                 masterChange = True
                                 break
                 for x in range(gridSize):
-                    if cellGrid[x][y] is not None and not cellGrid[x][y].hasChanged:
-                        if (
-                            cellGrid[x][y - 1] is not None
-                            and not cellGrid[x][y - 1].hasChanged
-                            and cellGrid[x][y - 1].value == cellGrid[x][y].value
-                        ):
-                            cellGrid[x][y - 1] = Cell(
-                                grid[x][y - 1], cellGrid[x][y].value * 2
-                            )
-                            score += cellGrid[x][y].value
-                            cellGrid[x][y - 1].setHasChanged(True)
-                            cellGrid[x][y] = None
-                            changed = True
-                            masterChange = True
-                            break
+                    if isMerge([x, y], [x, y - 1]):
+                        cellGrid[x][y - 1] = Cell(
+                            grid[x][y - 1], cellGrid[x][y].value * 2
+                        )
+                        score += cellGrid[x][y].value
+                        cellGrid[x][y - 1].setHasChanged(True)
+                        cellGrid[x][y] = None
+                        changed = True
+                        masterChange = True
+                        break
     elif direction == pygame.K_DOWN:
         changed = True
         while changed:
@@ -245,21 +240,16 @@ def shiftCells(direction):
                                 masterChange = True
                                 break
                 for x in range(gridSize):
-                    if cellGrid[x][y] is not None and not cellGrid[x][y].hasChanged:
-                        if (
-                            cellGrid[x][y + 1] is not None
-                            and not cellGrid[x][y + 1].hasChanged
-                            and cellGrid[x][y + 1].value == cellGrid[x][y].value
-                        ):
-                            cellGrid[x][y + 1] = Cell(
-                                grid[x][y + 1], cellGrid[x][y].value * 2
-                            )
-                            score += cellGrid[x][y].value
-                            cellGrid[x][y + 1].setHasChanged(True)
-                            cellGrid[x][y] = None
-                            changed = True
-                            masterChange = True
-                            break
+                    if isMerge([x, y], [x, y + 1]):
+                        cellGrid[x][y + 1] = Cell(
+                            grid[x][y + 1], cellGrid[x][y].value * 2
+                        )
+                        score += cellGrid[x][y].value
+                        cellGrid[x][y + 1].setHasChanged(True)
+                        cellGrid[x][y] = None
+                        changed = True
+                        masterChange = True
+                        break
     return masterChange
 
 
