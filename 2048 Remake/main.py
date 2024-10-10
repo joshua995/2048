@@ -1,6 +1,6 @@
 """
 Joshua Liu
-October 9th, 2024
+October, 2024
 2048 Remake
 """
 
@@ -132,7 +132,7 @@ def addNewCell():
 def shiftCells(direction):
     global score
     masterChange = False
-    if direction == "r":
+    if direction == pygame.K_RIGHT:
         changed = True
         while changed:
             changed = False
@@ -164,7 +164,7 @@ def shiftCells(direction):
                             changed = True
                             masterChange = True
                             break
-    elif direction == "l":
+    elif direction == pygame.K_LEFT:
         changed = True
         while changed:
             changed = False
@@ -196,7 +196,7 @@ def shiftCells(direction):
                             changed = True
                             masterChange = True
                             break
-    elif direction == "u":
+    elif direction == pygame.K_UP:
         changed = True
         while changed:
             changed = False
@@ -228,7 +228,7 @@ def shiftCells(direction):
                             changed = True
                             masterChange = True
                             break
-    else:
+    elif direction == pygame.K_DOWN:
         changed = True
         while changed:
             changed = False
@@ -368,7 +368,7 @@ def drawGame():
 
 
 def resetGame():
-    global grid, cellGrid, score
+    global grid, cellGrid, score, scorePrefix
     grid = [
         [(startPos + y * cellSize, startPos + x * cellSize) for x in range(gridSize)]
         for y in range(gridSize)
@@ -376,15 +376,14 @@ def resetGame():
     cellGrid = [[None for x in range(gridSize)] for y in range(gridSize)]
 
     score = 0
+    scorePrefix = "Score: "
     addNewCell()
     addNewCell()
     drawGame()
 
 
 if __name__ == "__main__":
-    addNewCell()
-    addNewCell()
-    drawGame()
+    resetGame()
     while not closeWindow:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -394,31 +393,11 @@ if __name__ == "__main__":
                 if playButton.onClick(mousePos[0], mousePos[1]) and isGameOver:
                     resetGame()
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_RIGHT:
-                    if shiftCells("r"):
-                        addNewCell()
-                        if isGameOver():
-                            scorePrefix = "Final Score:"
-                        drawGame()
-                if event.key == pygame.K_LEFT:
-                    if shiftCells("l"):
-                        addNewCell()
-                        if isGameOver():
-                            scorePrefix = "Final Score:"
-                        drawGame()
-                if event.key == pygame.K_UP:
-                    if shiftCells("u"):
-                        addNewCell()
-                        if isGameOver():
-                            scorePrefix = "Final Score:"
-                        drawGame()
-                if event.key == pygame.K_DOWN:
-                    if shiftCells("d"):
-                        addNewCell()
-                        if isGameOver():
-                            scorePrefix = "Final Score:"
-                        drawGame()
+                if shiftCells(event.key):
+                    addNewCell()
+        drawGame()
         if isGameOver():
+            scorePrefix = "Final Score:"
             playButton.draw()
         clock.tick(60)
         pygame.display.update()
