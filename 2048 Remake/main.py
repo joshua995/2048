@@ -10,6 +10,28 @@ from random import randint
 import pygame
 
 
+class Button(object):
+    def __init__(self, x, y, w, h) -> None:
+        self.text = pygame.font.SysFont("Arial", h // 2 + h // 4).render(
+            "Play Again", True, white
+        )
+        self.textRect = self.text.get_rect()
+        self.textRect.center = (x, y)
+        self.w = self.textRect.width
+        self.x = self.textRect.x
+        self.y = self.textRect.y
+        self.h = h
+
+    def onClick(self, x, y):
+        if self.x <= x <= self.x + self.w and self.y <= y <= self.y + self.h:
+            return True
+        return False
+
+    def draw(self):
+        pygame.draw.rect(screen, green, pygame.Rect(self.x, self.y, self.w, self.h))
+        screen.blit(self.text, self.textRect)
+
+
 class Cell(object):
     def __init__(self, pos, value):
         self.pos = [pos[0] + cellSize / 2, pos[1] + cellSize / 2]
@@ -24,9 +46,9 @@ class Cell(object):
         text = pygame.font.SysFont(
             "Arial", cellSize // len(stringVal) + cellSize // len(stringVal) // 4
         ).render(stringVal, True, white)
-        text_rect = text.get_rect()
-        text_rect.center = (self.pos[0], self.pos[1])
-        screen.blit(text, text_rect)
+        textRect = text.get_rect()
+        textRect.center = (self.pos[0], self.pos[1])
+        screen.blit(text, textRect)
 
 
 pygame.init()
@@ -67,6 +89,8 @@ scorePrefix = "Score :"
 playWithNegatives = False
 
 closeWindow = False
+
+playButton = Button(WINDOW_SIZE // 2, WINDOW_SIZE // 2, 150, 75)
 
 
 def createGrid():
@@ -271,7 +295,7 @@ def isGameOver():
                             masterChange = True
                             break
             for y in range(gridSize):
-                if cellGrid[x][y] is not None :
+                if cellGrid[x][y] is not None:
                     if (
                         cellGrid[x - 1][y] is not None
                         and cellGrid[x - 1][y].value == cellGrid[x][y].value
@@ -289,7 +313,7 @@ def isGameOver():
                             masterChange = True
                             break
             for x in range(gridSize):
-                if cellGrid[x][y] is not None :
+                if cellGrid[x][y] is not None:
                     if (
                         cellGrid[x][y - 1] is not None
                         and cellGrid[x][y - 1].value == cellGrid[x][y].value
@@ -307,7 +331,7 @@ def isGameOver():
                             masterChange = True
                             break
             for x in range(gridSize):
-                if cellGrid[x][y] is not None :
+                if cellGrid[x][y] is not None:
                     if (
                         cellGrid[x][y + 1] is not None
                         and cellGrid[x][y + 1].value == cellGrid[x][y].value
@@ -317,12 +341,18 @@ def isGameOver():
     return not masterChange
 
 
+def drawPlayButton():
+    pygame.draw.rect(
+        screen, red, pygame.Rect(WINDOW_SIZE // 2, WINDOW_SIZE // 2, 50, 50)
+    )
+
+
 def drawGame():
     screen.fill(black)
     text = FONT_50.render(f"{scorePrefix} {score}", True, white)
-    text_rect = text.get_rect()
-    text_rect.midleft = (startPos, startPos - 50)
-    screen.blit(text, text_rect)
+    textRect = text.get_rect()
+    textRect.midleft = (startPos, startPos - 50)
+    screen.blit(text, textRect)
     createGrid()
     [
         [
@@ -337,6 +367,20 @@ def drawGame():
     ]
 
 
+def resetGame():
+    global grid, cellGrid, score
+    grid = [
+        [(startPos + y * cellSize, startPos + x * cellSize) for x in range(gridSize)]
+        for y in range(gridSize)
+    ]
+    cellGrid = [[None for x in range(gridSize)] for y in range(gridSize)]
+
+    score = 0
+    addNewCell()
+    addNewCell()
+    drawGame()
+
+
 if __name__ == "__main__":
     addNewCell()
     addNewCell()
@@ -347,9 +391,9 @@ if __name__ == "__main__":
                 closeWindow = True
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mousePos = pygame.mouse.get_pos()
-            if (
-                event.type == pygame.KEYDOWN
-            ):  # TODO not quite right. Missing check no change
+                if playButton.onClick(mousePos[0], mousePos[1]) and isGameOver:
+                    resetGame()
+            if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RIGHT:
                     if shiftCells("r"):
                         addNewCell()
@@ -374,5 +418,7 @@ if __name__ == "__main__":
                         if isGameOver():
                             scorePrefix = "Final Score:"
                         drawGame()
+        if isGameOver():
+            playButton.draw()
         clock.tick(60)
         pygame.display.update()
